@@ -1,3 +1,5 @@
+Autores: Pedro Henrique Ferreira Zoz & Felipe Fonseca Rosa
+
 # Grafos C++
 
 ## O programa utiliza uma representação 'matricial'.

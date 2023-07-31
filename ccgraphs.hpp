@@ -1,3 +1,6 @@
+// Autores: Pedro Henrique Ferreira Zoz & Felipe Fonseca Rosa
+// Autor deste código fonte: Pedro Henrique Ferreira Zoz
+
 #ifndef CCGRAPHS
 #define CCGRAPHS
 
