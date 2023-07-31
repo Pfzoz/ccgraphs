@@ -1,0 +1,7 @@
+A 0 15 X B C 
+X -5 10 A E 
+B 0 10 A E 
+C 6 8 A D E 
+E 5 0 B C X F 
+D 10 8 C F 
+F 9 0 D E 
