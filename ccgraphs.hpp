@@ -93,7 +93,7 @@ public:
         return (*this->connections_names.get(name));
     }
 
-    void remove_connection_by_name(std::string name)
+    int remove_connection_by_name(std::string name)
     {
         int removed = 0;
         for (std::string key : this->vertices.keys)
@@ -112,12 +112,13 @@ public:
                     this->connections.get(b)->erase(this->connections.get(b)->begin() + i);
                     this->connections_names.get(b)->erase(this->connections_names.get(b)->begin() + i);
                     removed = 1;
-                    break;
+                    return removed;
                 }
             }
             if (removed)
-                break;
+                return removed;
         }
+        return removed;
     }
 
     Vertex get_vertex(std::string name)
@@ -135,8 +136,15 @@ public:
         return adjacents;
     }
 
-    void add_vertex(std::string name, int x, int y)
+    int add_vertex(std::string name, int x, int y)
     {
+        for (Vertex v : this->vertices.values)
+        {
+            if (v.x == x && v.y == y)
+            {
+                return 0;
+            }
+        }
         Vertex vertex;
         vertex.x = x;
         vertex.y = y;
@@ -145,22 +153,22 @@ public:
         std::vector<std::string> *conns_names = new std::vector<std::string>{};
         this->connections.set(name, conns);
         this->connections_names.set(name, conns_names);
+        return 1;
     }
 
-    void remove_vertex(std::string name)
+    int remove_vertex(std::string name)
     {
+        if (!has(vertices.keys, name))
+        {
+            return 0;
+        }
         this->vertices.erase(name);
-        std::cout << "Name: " << name << '\n';
         for (std::string key : this->connections.keys)
         {
-            std::cout << "Key: " << key << '\n';
-            std::cout << "I GLITCHED HERE!\n";
             for (int i = 0; i < (*this->connections.get(key)).size(); i++)
             {
-                std::cout << "OR HERE!\n";
                 if ((*this->connections.get(key))[i] == name)
                 {
-                    std::cout << "MAYBE HERE!\n";
                     this->connections.get(key)->erase(this->connections.get(key)->begin() + i);
                 }
             }
@@ -175,6 +183,7 @@ public:
         delete this->connections_names.get(name);
         this->connections.erase(name);
         this->connections_names.erase(name);
+        return 1;
     }
 
     void add_connection(std::string a, std::string b)
@@ -334,37 +343,28 @@ public:
         return _get_eulerian(name, path, graph);
     }
 
-    void _depth_search(std::vector<std::string> &visited, std::vector<std::string> &stack)
+    void _depth_search(std::string current, std::vector<std::string> &visited, std::vector<std::string> markers)
     {
-        for (std::string vertex : this->get_adjacents(visited[visited.size() - 1]))
+        auto adjacents = this->get_adjacents(current);
+        visited.push_back(current);
+        for (auto adjacent : adjacents)
         {
-            int has = 0;
-            for (std::string v : visited)
+            if (!has(visited, adjacent) && !has(markers, adjacent))
             {
-                if (vertex == v)
-                    has = 1;
+                auto new_markers = markers;
+                for (auto x : adjacents)
+                {
+                    if (x != adjacent) new_markers.push_back(x);
+                }
+                _depth_search(adjacent, visited, new_markers);
             }
-            for (std::string v : stack)
-            {
-                if (vertex == v)
-                    has = 1;
-            }
-            if (!has)
-                stack.push_back(vertex);
-        }
-        if (stack.size())
-        {
-            visited.push_back(stack[0]);
-            stack.erase(stack.begin());
-            this->_depth_search(visited, stack);
         }
     }
 
     std::vector<std::string> depth_search(std::string name)
     {
         std::vector<std::string> visited, stack;
-        visited.push_back(name);
-        this->_depth_search(visited, stack);
+        this->_depth_search(name, visited, std::vector<std::string>{});
         return visited;
     }
 
@@ -582,12 +582,6 @@ public:
             path.insert(path.begin(), winner);
             current_node = winner;
         }
-        std::cout << "Path found: ";
-        for (int i = 0; i < path.size(); i++)
-        {
-            std::cout << path[i] << ' ';
-        }
-        std::cout << '\n';
         return path;
     }
 };

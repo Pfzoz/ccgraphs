@@ -1,0 +1,8 @@
+A 0 0 B C D 
+B 5 15 A E 
+C 5 10 A 
+D 5 5 A 
+E 10 15 B F G 
+F 30 30 E O 
+G 30 10 E 
+O 50 50 F 

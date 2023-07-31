@@ -11,8 +11,14 @@ void djikstra(Graph &graph)
     std::cin >> name;
     std::cout << "Insira o nome do vértice destino: ";
     std::cin >> dest;
-    graph.djikstra(name, dest);
-    std::exit(1);
+    auto path = graph.djikstra(name, dest);
+    std::system("clear");
+    std::cout << ">> Caminho Encontrado: [ ";
+    for (std::string way : path)
+    {
+        std::cout << way << ' ';
+    }
+    std::cout << "] <<\n\n";
 }
 
 void load_graph(Graph &graph)
@@ -56,6 +62,7 @@ void depth_search(Graph &graph)
     std::cout << "Insira o nome do vértice para a procura: ";
     std::cin >> name;
     std::vector<std::string> path = graph.depth_search(name);
+    // std::exit(1);
     std::system("clear");
     std::cout << ">> [ ";
     for (std::string vertex : path)
@@ -83,11 +90,19 @@ void create_vertex(Graph &graph)
     int x, y;
     std::cout << "Insira rótulo do vértice: ";
     std::cin >> name;
-    std::cout << "Insira posição x e y do vértice: ";
+    std::cout << "Insira posição x e y do vértice -> '%x %y': ";
     std::cin >> x >> y;
-    graph.add_vertex(name, x, y);
+    std::cin.clear();
+    std::cin.ignore(1000, '\n');
     std::system("clear");
-    std::cout << ">> Vértice criado <<\n\n";
+    if (graph.add_vertex(name, x, y))
+    {
+        std::cout << ">> Vértice criado <<\n\n";
+    }
+    else
+    {
+        std::cout << ">> Um vértice já existe sobre essas coordenadas! <<\n\n";
+    };
 }
 
 void remove_vertex(Graph &graph)
@@ -95,9 +110,15 @@ void remove_vertex(Graph &graph)
     std::string name;
     std::cout << "Insira o rótulo do vértice a ser removido: ";
     std::cin >> name;
-    graph.remove_vertex(name);
     std::system("clear");
-    std::cout << ">> Vértice removido <<\n\n";
+    if (graph.remove_vertex(name))
+    {
+        std::cout << ">> Vértice removido <<\n\n";
+    }
+    else
+    {
+        std::cout << ">> Vértice não existente <<\n\n";
+    }
 }
 
 void remove_connection(Graph &graph)
@@ -105,9 +126,15 @@ void remove_connection(Graph &graph)
     std::string name;
     std::cout << "Insira o nome da aresta a ser removida: ";
     std::cin >> name;
-    graph.remove_connection_by_name(name);
     std::system("clear");
-    std::cout <<">> Aresta removida <<\n\n";
+    if (graph.remove_connection_by_name(name))
+    {
+        std::cout <<">> Aresta removida <<\n\n";
+    }
+    else
+    {
+        std::cout <<">> Aresta não existente <<\n\n";
+    }
 }
 
 void get_eulerian(Graph &graph)
@@ -115,8 +142,13 @@ void get_eulerian(Graph &graph)
     std::string name;
     std::cout << "Insira o vértice inicial do caminho euleriano: ";
     std::cin >> name;
-    std::vector<std::string> path = graph.get_eulerian(name);
+    auto path = graph.get_eulerian(name);
     std::system("clear");
+    if (graph.is_eulerian() != 1)
+    {
+        std::cout << ">> Não possível realizar a operação. (Grafo não é Euleriano) <<\n\n";
+        return;
+    }
     std::cout << ">> Caminho Euleriano: [ ";
     for (std::string vertex : path)
     {
