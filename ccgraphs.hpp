@@ -107,11 +107,8 @@ public:
                 {
                     std::string b;
                     b = (*this->connections.get(key))[i];
-                    std::cout << "B:" << b << '\n';
-                    std::cout << "Here1\n";
                     this->connections.get(key)->erase(this->connections.get(key)->begin() + i);
                     this->connections_names.get(key)->erase(this->connections_names.get(key)->begin() + i);
-                    std::cout << "Here2\n";
                     this->connections.get(b)->erase(this->connections.get(b)->begin() + i);
                     this->connections_names.get(b)->erase(this->connections_names.get(b)->begin() + i);
                     removed = 1;
@@ -383,7 +380,6 @@ public:
             }
             if (!has)
             {
-                std::cout << "pushei " << vertex << '\n';
                 visited.push_back(vertex);
                 queue.push_back(vertex);
             }
@@ -515,19 +511,11 @@ public:
         int not_visited = 1;
         while (not_visited)
         {
-            std::cout << "Current name: " << name << '\n';
             auto adjacents = this->get_adjacents(name);
-            // std::string lesser = adjacents[0];
             for (std::string adjacent : adjacents)
             {
                 if (!visited.get(adjacent))
                 {
-                    // if (this->distance(name, adjacent) + costs.get(name) < this->distance(name, lesser) + costs.get(name))
-                    // {
-                    //     lesser = adjacent;
-                    //     visited.set(lesser, 1);
-                    // }
-
                     if (this->distance(name, adjacent) + costs.get(name) < costs.get(adjacent))
                     {
                         costs.set(adjacent, this->distance(name, adjacent) + costs.get(name));
@@ -542,10 +530,6 @@ public:
                     decider.set(decider.keys[i], INFINITE);
                 }
             }
-            for (std::string key : visited.keys)
-            {
-                std::cout << "Visited " << key << ":" << visited.get(key) << '\n';
-            }
             int minimum = get_min(decider.values);
             name = decider.keys[minimum];
             visited.set(name, 1);
@@ -557,12 +541,6 @@ public:
                 if (x == 0)
                     not_visited = 1;
             }
-            counter++;
-            // if (counter == 3) break;
-        }
-        for (std::string key : costs.keys)
-        {
-            std::cout << "Key " << key << ": " << costs.get(key) << '\n';
         }
         std::string current_node = dest;
         std::vector<std::string> path;

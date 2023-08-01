@@ -13,14 +13,28 @@ void djikstra(Graph &graph)
     std::cin >> name;
     std::cout << "Insira o nome do vértice destino: ";
     std::cin >> dest;
-    auto path = graph.djikstra(name, dest);
     std::system("clear");
-    std::cout << ">> Caminho Encontrado: [ ";
-    for (std::string way : path)
+    std::vector<std::string> search_result = graph.breadth_search(name);
+    int has = 0;
+    for (std::string nearby : search_result)
     {
-        std::cout << way << ' ';
+        if (nearby == dest)
+            has = 1;
     }
-    std::cout << "] <<\n\n";
+    if (has)
+    {
+        auto path = graph.djikstra(name, dest);
+        std::cout << ">> Caminho Encontrado: [ ";
+        for (std::string way : path)
+        {
+            std::cout << way << ' ';
+        }
+        std::cout << "] <<\n\n";
+    }
+    else
+    {
+        std::cout << ">> Caminho impossível. Destino é desconexo à origem <<\n\n";
+    }
 }
 
 void load_graph(Graph &graph)
@@ -131,11 +145,11 @@ void remove_connection(Graph &graph)
     std::system("clear");
     if (graph.remove_connection_by_name(name))
     {
-        std::cout <<">> Aresta removida <<\n\n";
+        std::cout << ">> Aresta removida <<\n\n";
     }
     else
     {
-        std::cout <<">> Aresta não existente <<\n\n";
+        std::cout << ">> Aresta não existente <<\n\n";
     }
 }
 
@@ -173,9 +187,15 @@ int main()
         std::cout << "Euleriano: ";
         switch (graph.is_eulerian())
         {
-            case (1): std::cout << "Sim\n"; break;
-            case (2): std::cout << "Não (Semi-Euleriano)\n"; break;
-            case (0): std::cout << "Não\n"; break;
+        case (1):
+            std::cout << "Sim\n";
+            break;
+        case (2):
+            std::cout << "Não (Semi-Euleriano)\n";
+            break;
+        case (0):
+            std::cout << "Não\n";
+            break;
         }
         std::cout << "Vértices: [ ";
         for (int i = 0; i < graph.all().size(); i++)
